@@ -1,52 +1,38 @@
-const bodyParser = require("body-parser");
+require("dotenv").config();
 const express = require("express");
+const bodyParser = require("body-parser");
 const app = express();
+const fileUpload = require("express-fileupload");
+const { saveFile, saveFiles, deleteFile } = require("./utils/gallery");
 
 app.use(bodyParser.json());
+app.use(fileUpload());
 
-let users = [
-  { id: "1", name: "Mg Mg", email: "mgmg@gmail.com" },
-  { id: "2", name: "Ag Ag", eAail: "agag@gmail.com" },
-];
+//Single File
+// app.post("/cats", saveFile, (req, res, next) => {
+//   res.status(200).send({ result: req.body });
+// });
 
-app.get("/", (req, res) => {
-  res.status(200).json({ One: "Good" });
+//Multiple Files
+// app.post("/cats", saveFiles, (req, res, next) => {
+//   res.status(200).send({ result: req.body });
+// });
+
+//Delete File
+// app.post("/cats", (req, res, next) => {
+//   deleteFile("1698854093789_02_lady__jea_3.jpg");
+//   res.status(200).send({ result: req.body });
+// });
+
+app.use((err, req, res, next) => {
+  err.status = err.status || 404;
+  res.status(err.status).json({ con: false, msg: err.message });
 });
 
-app.get("/user", (req, res) => {
-  res.status(200).json({ id: "1", name: "Mg Mg", email: "mgmg@gmail.com" });
+app.use("*", (req, res) => {
+  res.status(200).send({ con: true, msg: "No route with that request!" });
 });
 
-app.get("/users", (req, res) => {
-  res.status(200).json({ users: users });
-});
-
-app.get("/user/:id", (req, res) => {
-  const user = users.find((user) => user.id === req.params.id);
-  res.status(200).json({ user: user });
-});
-
-app.get("/user/:id/:name", (req, res) => {
-  res.status(200).json({ id: req.params.id, name: req.params.name });
-});
-
-app.post("/user", (req, res) => {
-  users.push(req.body);
-  res.status(200).json({ users: users });
-});
-
-app.patch("/user/:id", (req, res) => {
-  const user = users.find((user) => user.id === req.params.id);
-  user.name = req.body.name;
-  user.email = req.body.email;
-
-  res.status(200).json({ users: users });
-});
-
-app.delete("/user/:id", (req, res) => {
-  users = users.filter((user) => user.id != req.params.id);
-
-  res.status(200).json({ users: users });
-});
-
-app.listen(3000, () => console.log("We Are Running at port 3000"));
+app.listen(process.env.PORT, () =>
+  console.log(`We Are Running at port ${process.env.PORT}`)
+);
