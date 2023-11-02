@@ -29,3 +29,20 @@ app.use("*", (req, res) => {
 });
 
 app.listen(3000, () => console.log("We Are Running at port 3000"));
+
+
+//Single File
+app.post("/cats", saveFile, (req, res, next) => {
+  res.status(200).send({ result: req.body });
+});
+
+//Multiple Files
+app.post("/cats", saveFiles, (req, res, next) => {
+  res.status(200).send({ result: req.body });
+});
+
+//Delete File
+app.post("/cats", (req, res, next) => {
+  deleteFile("1698854093789_02_lady__jea_3.jpg");
+  res.status(200).send({ result: req.body });
+});

@@ -3,26 +3,15 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
 const fileUpload = require("express-fileupload");
-const { saveFile, saveFiles, deleteFile } = require("./utils/gallery");
+const mongoose = require("mongoose");
 
+mongoose.connect(`mongodb://127.0.0.1:27017/${process.env.DB_NAME}`);
 app.use(bodyParser.json());
 app.use(fileUpload());
 
-//Single File
-// app.post("/cats", saveFile, (req, res, next) => {
-//   res.status(200).send({ result: req.body });
-// });
+const categoryRoute = require("./routes/category");
 
-//Multiple Files
-// app.post("/cats", saveFiles, (req, res, next) => {
-//   res.status(200).send({ result: req.body });
-// });
-
-//Delete File
-// app.post("/cats", (req, res, next) => {
-//   deleteFile("1698854093789_02_lady__jea_3.jpg");
-//   res.status(200).send({ result: req.body });
-// });
+app.use("/cats", categoryRoute);
 
 app.use((err, req, res, next) => {
   err.status = err.status || 404;
