@@ -9,9 +9,11 @@ mongoose.connect(`mongodb://127.0.0.1:27017/${process.env.DB_NAME}`);
 app.use(bodyParser.json());
 app.use(fileUpload());
 
-const categoryRoute = require("./routes/category");
+const categoryRouter = require("./routes/category");
+const subcatRouter = require("./routes/subcat");
 
-app.use("/cats", categoryRoute);
+app.use("/cats", categoryRouter);
+app.use("/subcats", subcatRouter);
 
 app.use((err, req, res, next) => {
   err.status = err.status || 404;

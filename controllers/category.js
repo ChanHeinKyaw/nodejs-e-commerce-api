@@ -2,7 +2,7 @@ const TB = require("../models/category");
 const LIBBY = require("../utils/libby");
 
 let all = async (req, res) => {
-  let result = await TB.find();
+  let result = await TB.find().populate("subcats");
   LIBBY.fMsg(res, "All Categories", result);
 };
 
